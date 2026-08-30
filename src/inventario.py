@@ -37,3 +37,4 @@ class Inventario:
 
     def obtener_reporte_alertas(self):
         return [p for p in self.productos.values() if p["stock"] <= p["umbral_minimo"]]
+    #prueba
