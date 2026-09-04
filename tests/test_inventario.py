@@ -1,5 +1,6 @@
 import pytest
 from src.inventario import Inventario
+from src.inventario import ProductoInventario
 
 def test_cp01_registro_stock_negativo():
     inv = Inventario()
@@ -30,7 +31,19 @@ def test_cp05_prevenir_stock_negativo_en_salida():
     inv.registrar_producto("P105", "Lija", 10, 5)
     with pytest.raises(ValueError):
         inv.actualizar_stock("P105", -25)
-
+        
+def test_cp05_prevencion_stock_negativo_salida_excesiva():
+    """CP05 (CRÍTICO): Verifica que no se pueda retirar más stock del disponible."""
+    # Dado un producto con 10 unidades en inventario
+    producto = ProductoInventario(codigo="FERR-001", nombre="Martillo 16oz", stock=10, umbral_minimo=5)
+    
+    # Cuando se intenta registrar una salida de 15 unidades (excesiva)
+    with pytest.raises(ValueError, match="Stock insuficiente"):
+        producto.registrar_salida(15)
+        
+    # Entonces el stock permanece intacto en 10
+    assert producto.stock == 10
+    
 def test_cp06_aceptacion_flujo_reporte_completo():
     inv = Inventario()
     inv.registrar_producto("P201", "Taladro", 2, 5)
