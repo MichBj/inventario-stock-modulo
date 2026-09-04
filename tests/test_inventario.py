@@ -1,6 +1,6 @@
 import pytest
 from src.inventario import Inventario
-from src.inventario import ProductoInventario
+from src.inventario import ProductoInventario, GestionInventario
 
 def test_cp01_registro_stock_negativo():
     inv = Inventario()
@@ -51,3 +51,11 @@ def test_cp06_aceptacion_flujo_reporte_completo():
     reporte = inv.obtener_reporte_alertas()
     assert len(reporte) == 1
     assert reporte[0]["nombre"] == "Taladro"
+#Prueba para la función de Registro de Producto
+def test_registrar_producto_exitoso():
+    """Verifica que un nuevo producto se agregue correctamente al inventario."""
+    gestion = GestionInventario()
+    producto = ProductoInventario(codigo="FERR-002", nombre="Taladro 1/2", stock=5, umbral_minimo=2)
+    
+    gestion.agregar_producto(producto)
+    assert gestion.obtener_producto("FERR-002").nombre == "Taladro 1/2"    
